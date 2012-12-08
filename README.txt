@@ -4,5 +4,5 @@ I have created a repository so that I can learn new stuff by improving this proj
 
 Improve it by:
 using synfony 2
-making use of javascript and jquery
+making use of javascript, jquery and AJAX 
 making use of HTML5 and CSS3
