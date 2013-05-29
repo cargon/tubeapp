@@ -1,18 +1,26 @@
 <?php 
-	session_start();
-	if( $_COOKIE["login"]== 'true' || isset($_SESSION["uid"]) )
-		$logged = 1;
-        define( 'EXECUTA', 1 );
+	define( 'EXECUTA', 1 );
+        define( 'LOGGEDIN', 1);
+        define('LOGGEDOUT', 0);
+        $logged = LOGGEDOUT;
+
+        session_start();
+	
+        if( /*$_COOKIE["login"]== 'true' ||*/ isset($_SESSION["uid"]) )
+		$logged = LOGGEDIN;
+    
+        
+        
         include ("VideoList.class.php");
         include ("Video.class.php");
         include ("DBMANAGER.php");
-		include ("user.class.php");
-		include ("comment.class.php");
+	include ("user.class.php");
+	include ("comment.class.php");
+        
         $db = new DBManager();
         $db->open_dblink();
-        $dblink = $db->get_dblink();
-        
-        ?>
+        $dblink = $db->get_dblink();        
+?>
 
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
@@ -32,7 +40,8 @@
     <tr>
      <?php
 //////////////////////////////////////////// AUTENTICAÇAO ////////////////////////////////
-     if($logged==1){ ?>
+     if(isset($logged))
+         if($logged==LOGGEDIN){ ?>
     	<td> <a href="logout.php">| logout</a> | <a href="index.php?loc=1">Inserir Videos</a>| <a href="index.php?loc=5">Alterar os meus dados</a> | <a href="index.php?loc=6">Os meus Videos</a> | <a href="index.php?loc=10">Os meus favoritos</a> |</td>
 <?php } else {  ?>
           
@@ -53,7 +62,8 @@
     <tr>
     <td colspan="5">
 		<?php 
-			switch($_GET["lgerror"])
+			if(isset($_GET["lgerror"]))
+                        switch($_GET["lgerror"])
 			{
 				case 1:
 					{
@@ -78,7 +88,8 @@
 		?>
     </td>
     <td colspan="2">
-    	<?php if($logged != 1)echo "<a href=\"index.php?loc=2\">Registe-se </a>"; ?>
+    	<?php  
+                    if($logged != LOGGEDIN)echo "<a href=\"index.php?loc=2\">Registe-se </a>"; ?>
         </td>
     <td>&nbsp;</td></tr>
     
@@ -109,7 +120,7 @@
   <div class="middlecontainer">
 	<?php
 ////////////////////////////////////////// MEIO ///////////////////////////////////////////////////////////////
-		$local = $_GET["loc"];
+		$local = isset($_GET["loc"])? $_GET["loc"] : 'default';
 		switch($local)
 		{
 			case '1':
